@@ -84,7 +84,7 @@ Options:
 
 -r string     Prefix for output file names
 
--z tag        Additional tag appended to current time stamp
+-z tag        Tag that replaces current time stamp
 
 -P            use this switch if mature_ref_miRNAs contain miRBase v18 identifiers (5p and 3p) instead of previous ids from v17
 
@@ -214,7 +214,7 @@ if($options{a}){$stack_height_min=$options{a};}
 my $dir;
 my $dir_tmp;
 
-if(defined $options{'z'}){$time.=$options{'z'}};
+if(defined $options{'z'}){$time=$options{'z'}};
 
 ################################################## MAIN ############################################################
 

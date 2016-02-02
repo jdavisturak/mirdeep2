@@ -6,7 +6,7 @@ use Getopt::Std;
 use File::Copy;
 use File::Path;
 use Term::ANSIColor;
-
+use File::Basename;
 
 ####################################### USAGE ####################################################
 
@@ -245,7 +245,8 @@ sub process_reads{
     $orig_file_reads=$file_reads_latest;
 	if($file_reads_latest =~ /([_\-.a-zA-Z0-9]+)$/){$orig_file_reads=$1;}
 	#	die $orig_file_reads,"\n";
-
+    my ($name,$path,$suffix) = fileparse($orig_file_reads); 
+    $orig_file_reads = $name.$suffix; # Gets rid of path as part of string
     $dir=make_dir_tmp("_${prefix}_$orig_file_reads"); 
     #parse Solexa to fasta
     if($options{h}){

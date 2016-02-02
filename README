@@ -1,5 +1,10 @@
 Authors : Marc Friedlaender and Sebastian Mackowiak.
 Date:     12/08/2009
+Additions by:
+Jeremy Davis-Turak
+Onramp Bioinformatic, Inc
+02/02/2016
+
 
 This is miRDeep2 developed by Marc Friedlaender and Sebastian Mackowiak.
 miRDeep2 discovers active known or novel miRNAs from deep sequencing data (Solexa/Illumina, 454, ...).

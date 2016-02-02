@@ -28,7 +28,7 @@ my %mapcounts;
 
 my %seen;
 my $species = "none";
-my $time= time();
+my $time=1; #time();
 
 
 my %organisms;
