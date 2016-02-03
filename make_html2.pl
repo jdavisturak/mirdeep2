@@ -258,7 +258,7 @@ if($options{b}){
 PrintQuantifier();
 
 CloseHTML();
-system("cp expression_analyses/expression_analyses_${time}/expression_${time}.html expression_${time}.html");
+system("cp expression_analyses_${time}/expression_${time}.html expression_${time}.html");
 
 
 if(not $options{'d'}){
@@ -1585,7 +1585,7 @@ sub PrintQuantifier{
     my $reads;
 
     ## create HTML for quantifier module
-    open HTML,">expression_analyses/expression_analyses_${time}/expression_${time}.html" or die "cannot create expression_analyses/expression_analyses_${time}/expression_${time}.html\n";
+    open HTML,">expression_analyses_${time}/expression_${time}.html" or die "cannot create expression_analyses/expression_analyses_${time}/expression_${time}.html\n";
     CreateHTML(); ##
     PrintHtmlTableHeader();
     
@@ -1598,7 +1598,7 @@ sub PrintQuantifier{
     $mature .= '_mapped.arf'; ## change .fa suffix to _mapped.arf
     
     my %exprs;
-	open IN,"<expression_analyses/expression_analyses_${time}/miRNA_expressed.csv" or die "Error: File expression_analyses/expression_analyses_${time}/miRNA_expressed.csv not found\n";
+	open IN,"<expression_analyses_${time}/miRNA_expressed.csv" or die "Error: File expression_analyses/expression_analyses_${time}/miRNA_expressed.csv not found\n";
     
     ## this is the replacement for exprs hash
     my %exprs2;
@@ -1637,7 +1637,7 @@ sub PrintQuantifier{
         close IN;
     }
 
-    my $exdir = "expression_analyses/expression_analyses_${time}";
+    my $exdir = "expression_analyses_${time}";
     
     ## read in mature,precursor and star seuqnces;
     
@@ -1708,7 +1708,7 @@ sub PrintQuantifier{
     }
     close IN;
 
-    open IN,"<expression_analyses/expression_analyses_${time}/mature2hairpin" or die "Error: File expression_analyses/expression_analyses_${time}/mature2hairpin not found\n";
+    open IN,"<expression_analyses_${time}/mature2hairpin" or die "Error: File expression_analyses/expression_analyses_${time}/mature2hairpin not found\n";
     my %hairpin2mature2;
 	while(<IN>){
         chomp;

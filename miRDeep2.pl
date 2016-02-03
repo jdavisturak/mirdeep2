@@ -541,7 +541,7 @@ If you have precursors with less than $minpreslen please use option -p <int> to 
             my $quant = "quantifier.pl -p $file_precursors -m $file_mature_ref_this_species  -r $file_reads $file_star $species -y $time -k $dopt $Popt";
             print STDERR $quant,"\n";
             `$quant`;
-            $options{'q'} = "expression_analyses/expression_analyses_$time/miRBase.mrd";
+            $options{'q'} = "expression_analyses_$time/miRBase.mrd";
 
             end();
         }else{
@@ -874,8 +874,8 @@ sub output_results{
 
     ## choose file to use for counting miRNAs in data
     my $xopt = "$dir_tmp/signature.arf";
-    if(-f "expression_analyses/expression_analyses_$time/miRNA_expressed.csv"){
-        $xopt = "expression_analyses/expression_analyses_$time/miRNA_expressed.csv";
+    if(-f "expression_analyses_$time/miRNA_expressed.csv"){
+        $xopt = "expression_analyses_$time/miRNA_expressed.csv";
     }
 	my $sc=0;
 	$sc=$options{'b'} if($options{'b'});

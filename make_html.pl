@@ -2925,7 +2925,7 @@ sub PrintKnownnotfound{
     $mature .= "${extension0}_mapped.arf"; ## change .fa suffix to _mapped.arf
     
     my %exprs;
-	open IN,"<expression_analyses/expression_analyses_${time}/miRNA_expressed.csv" or die "Error: File expression_analyses/expression_analyses_${time}/miRNA_expressed.csv not found\n";
+	open IN,"<expression_analyses_${time}/miRNA_expressed.csv" or die "Error: File expression_analyses/expression_analyses_${time}/miRNA_expressed.csv not found\n";
 	while(<IN>){
         chomp;
         next if(/precursor/);
@@ -3186,7 +3186,7 @@ sub PrintKnownnotfound{
 		
 		my $rt=0;
 
-		open IN,"expression_analyses/expression_analyses_$options{'y'}/expression_$options{'y'}.html" or die "No file found called expression_analyses/expression_analyses_$options{'y'}/expression_$options{'y'}.html\n";
+		open IN,"expression_analyses_$options{'y'}/expression_$options{'y'}.html" or die "No file found called expression_analyses/expression_analyses_$options{'y'}/expression_$options{'y'}.html\n";
 		while(<IN>){
 			if(/miRBase precursor id/){
 				$start=1;
@@ -3503,7 +3503,7 @@ sub PrintKnownnotfound{
 	close CSV;
     return;
     ## read in all miRBase not in data
-    open IN,"expression_analyses/expression_analyses_${time}/miRNA_not_expressed.csv" or die "expression_analyses/expression_analyses_${time}/miRNA_not_expressed.csv not found\nplease run quantifier module again and check for errors\n\n";
+    open IN,"expression_analyses_${time}/miRNA_not_expressed.csv" or die "expression_analyses/expression_analyses_${time}/miRNA_not_expressed.csv not found\nplease run quantifier module again and check for errors\n\n";
 
     my %not_exprs;
     
@@ -3589,7 +3589,7 @@ sub check_Rfam{
     
     my $err;
     if($options{'q'}){
-        open TMP,">expression_analyses/expression_analyses_${time}/identified_precursors.fa" or die "Error: could not create file expression_analyses/expression_analyses_${time}/identified_precursors.fa\n";
+        open TMP,">expression_analyses_${time}/identified_precursors.fa" or die "Error: could not create file expression_analyses/expression_analyses_${time}/identified_precursors.fa\n";
     }else{
         open TMP,">mirdeep_runs/run_${time}/identified_precursors.fa" or die "Error: could not create file mirdeep_runs/run_${time}/identified_precursors.fa\n";
     }
@@ -3645,8 +3645,8 @@ The Rfam analysis will be skipped as long as this is not possible\n\n";
     print STDERR "Mapping mature,star and loop sequences against index\n";
     ## I think 0 MM would be too conservative
     if($options{'q'}){
-        $err = `bowtie -f -v 1 -a --best --strata --norc ${scripts}indexes/Rfam_index expression_analyses/expression_analyses_${time}/identified_precursors.fa expression_analyses/expression_analyses_${time}/rfam_vs_precursor.bwt`;
-        open IN,"<expression_analyses/expression_analyses_${time}/rfam_vs_precursor.bwt" or die "Error: file expression_analyses/expression_analyses_${time}/rfam_vs_precursor.bwt not found\n";
+        $err = `bowtie -f -v 1 -a --best --strata --norc ${scripts}indexes/Rfam_index expression_analyses_${time}/identified_precursors.fa expression_analyses/expression_analyses_${time}/rfam_vs_precursor.bwt`;
+        open IN,"<expression_analyses_${time}/rfam_vs_precursor.bwt" or die "Error: file expression_analyses/expression_analyses_${time}/rfam_vs_precursor.bwt not found\n";
     }else{
         $err = `bowtie -f -v 1 -a --best --strata --norc ${scripts}indexes/Rfam_index mirdeep_runs/run_${time}/identified_precursors.fa mirdeep_runs/run_${time}/rfam_vs_precursor.bwt`;
         open IN,"<mirdeep_runs/run_${time}/rfam_vs_precursor.bwt" or die "Error: file mirdeep_runs/run_${time}/rfam_vs_precursor.bwt not found\n";

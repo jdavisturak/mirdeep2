@@ -144,7 +144,7 @@ sub Sortarf {
 		print "$hash2{$_}\n";                         ## print hash
 	}
 }
-
+system("rm -rf $dir");
 exit;
 
 
