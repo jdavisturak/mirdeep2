@@ -271,7 +271,7 @@ started: $sTimeG
 ended: $eTimeG
 total:", int($etimeG / 3600),"h:",int(($etimeG % 3600) / 60),"m:",int($etimeG % 60),"s\n\n";
 
-open OUT,">>$dir/run_${time}_parameters" or die "parameter file not found\n";
+open OUT,">>parameters" or die "parameter file not found\n";
 print OUT "miRDeep runtime: \n
 started: $sTimeG
 ended: $eTimeG
@@ -561,19 +561,22 @@ If you have precursors with less than $minpreslen please use option -p <int> to 
 sub make_dir_tmp{
 
     #make temporary directory
-    if(not -d "mirdeep_runs"){
-        mkdir("mirdeep_runs");
-    }
-
-
-    $dir="mirdeep_runs/run_$time";
+    #if(not -d "mirdeep_runs"){
+    #    mkdir("mirdeep_runs");
+    #}
 
     print STDERR "mkdir $dir\n\n";
-    mkdir("$dir");
+    $dir="$time";
+    if(not -d "$dir"){
+        mkdir("$dir");
+    }	
+    chdir($dir);
+    
+    $dir_tmp = "tmp";
 
-    $dir_tmp = "$dir/tmp";
-
-    mkdir("$dir_tmp");
+    if(not -d "$dir_tmp"){
+    	mkdir("$dir_tmp");
+    }	
 
     return;
 }
@@ -777,20 +780,20 @@ sub miRDeep_core_algorithm{
 
     unless($options{c}){$line.=" -y $dir_tmp/precursors_for_randfold.rand";}
 
-    print STDERR "$line > $dir/output.mrd\n";
-    my $ret_miRDeep_core=`$line > $dir/output.mrd`;
+    print STDERR "$line > output.mrd\n";
+    my $ret_miRDeep_core=`$line > output.mrd`;
 	if($options{'E'}){
-		$ret_miRDeep_core=`$line -t > $dir/error.output.mrd`;
+		$ret_miRDeep_core=`$line -t > error.output.mrd`;
 	}
 
     end();
 
 	#check if file is empty
-	if(-z "$dir/output.mrd"){
-		print STDERR "Error:\n\tFile $dir/output.mrd is empty\n\n";
+	if(-z "output.mrd"){
+		print STDERR "Error:\n\tFile output.mrd is empty\n\n";
 		print STDERR "Now running miRDeep2_core_algorithm.pl with option -t to see why all precursors were discarded\n";
-		my $ret_miRDeep_core=`$line -t > error.output.mrd_$time`;
-		print STDERR "The debug file is called error.output.mrd_$time\n";
+		my $ret_miRDeep_core=`$line -t > output.mrd`;
+		print STDERR "The debug file is called output.mrd\n";
 		die "\nExiting now\n\n";
 	}
 
@@ -818,8 +821,8 @@ sub perform_controls{
 
     unless($options{c}){$line.=" -y $dir_tmp/precursors_for_randfold.rand";}
 
-    print STDERR "echo '$line > $dir/output.mrd' > $dir_tmp/command_line\n\n";
-    my $ret_command_line=`echo '$line > $dir/output.mrd' > $dir_tmp/command_line`;
+    print STDERR "echo '$line > output.mrd' > $dir_tmp/command_line\n\n";
+    my $ret_command_line=`echo '$line > output.mrd' > $dir_tmp/command_line`;
     print STDERR "perform_controls.pl $dir_tmp/command_line $dir_tmp/precursors.str 100 -a > $dir_tmp/output_permuted.mrd 2>>error_${time}.log\n\n";
     my $ret_perform_controls=`perform_controls.pl $dir_tmp/command_line $dir_tmp/precursors.str 100 -a > $dir_tmp/output_permuted.mrd 2>>error_${time}.log`;
     end();
@@ -837,16 +840,16 @@ sub make_survey{
 
     if($file_mature_ref_this_species !~ /none/i){
 
-        print STDERR "survey.pl $dir/output.mrd -a $dir_tmp/output_permuted.mrd -b $dir_tmp/$file_mature_ref_this_species -c $dir_tmp/signature.arf -d $stack_height_min > $dir/survey.csv\n\n";
+        print STDERR "survey.pl output.mrd -a $dir_tmp/output_permuted.mrd -b $dir_tmp/$file_mature_ref_this_species -c $dir_tmp/signature.arf -d $stack_height_min > survey.csv\n\n";
         start();
-        my $ret_survey=`survey.pl $dir/output.mrd -a $dir_tmp/output_permuted.mrd -b $dir_tmp/$file_mature_ref_this_species -c $dir_tmp/signature.arf -d $stack_height_min > $dir/survey.csv`;
+        my $ret_survey=`survey.pl output.mrd -a $dir_tmp/output_permuted.mrd -b $dir_tmp/$file_mature_ref_this_species -c $dir_tmp/signature.arf -d $stack_height_min > survey.csv`;
         end();
 
     }else{
 
-        print STDERR "survey.pl $dir/output.mrd -a $dir_tmp/output_permuted.mrd -d $stack_height_min > $dir/survey.csv\n\n";
+        print STDERR "survey.pl output.mrd -a $dir_tmp/output_permuted.mrd -d $stack_height_min > survey.csv\n\n";
         start();
-        my $ret_survey=`survey.pl $dir/output.mrd -a $dir_tmp/output_permuted.mrd -d $stack_height_min > $dir/survey.csv`;
+        my $ret_survey=`survey.pl output.mrd -a $dir_tmp/output_permuted.mrd -d $stack_height_min > survey.csv`;
         end();
     }
 
@@ -885,15 +888,15 @@ sub output_results{
     if($file_mature_ref_this_species !~ /none/i){
 
         if($options{'q'}){
-            $line="make_html.pl -f $dir/output.mrd -k $dir_tmp/$file_mature_ref_this_species -p $dir_tmp/precursors.coords -s $dir/survey.csv -c -e -q $options{'q'} -x $xopt -r ${scripts}Rfam_for_miRDeep.fa -v $sc -y $time $sort_by_sample $OE";
+            $line="make_html.pl -f output.mrd -k $dir_tmp/$file_mature_ref_this_species -p $dir_tmp/precursors.coords -s survey.csv -c -e -q $options{'q'} -x $xopt -r ${scripts}Rfam_for_miRDeep.fa -v $sc -y $time $sort_by_sample $OE";
         }else{
-            $line="make_html.pl -f $dir/output.mrd -k $dir_tmp/$file_mature_ref_this_species -p $dir_tmp/precursors.coords -s $dir/survey.csv -c -e -r ${scripts}Rfam_for_miRDeep.fa -v $sc -y $time  $sort_by_sample $OE";
+            $line="make_html.pl -f output.mrd -k $dir_tmp/$file_mature_ref_this_species -p $dir_tmp/precursors.coords -s survey.csv -c -e -r ${scripts}Rfam_for_miRDeep.fa -v $sc -y $time  $sort_by_sample $OE";
         }
     }else{
         if($options{'q'}){
-            $line="make_html.pl -f $dir/output.mrd -p $dir_tmp/precursors.coords -s $dir/survey.csv -c -e -q $options{'q'}  -x $xopt -r ${scripts}Rfam_for_miRDeep.fa -v $sc -y $time $sort_by_sample $OE";
+            $line="make_html.pl -f output.mrd -p $dir_tmp/precursors.coords -s survey.csv -c -e -q $options{'q'}  -x $xopt -r ${scripts}Rfam_for_miRDeep.fa -v $sc -y $time $sort_by_sample $OE";
         }else{
-            $line="make_html.pl -f $dir/output.mrd -p $dir_tmp/precursors.coords -v $sc -s $dir/survey.csv -c -e -r ${scripts}Rfam_for_miRDeep.fa -y $time $sort_by_sample $OE";
+            $line="make_html.pl -f output.mrd -p $dir_tmp/precursors.coords -v $sc -s survey.csv -c -e -r ${scripts}Rfam_for_miRDeep.fa -y $time $sort_by_sample $OE";
         }
     }
 
@@ -962,7 +965,7 @@ total:", int($etime / 3600),"h:",int(($etime % 3600) / 60),"m:",int($etime % 60)
 
 
 sub printUsedParameters{
-    open OUT,">$dir/run_${time}_parameters" or die "\nError:\n\tcannot create runtime file to save parameters\n";
+    open OUT,">parameters" or die "\nError:\n\tcannot create runtime file to save parameters\n";
 	print OUT "Start: $time\n";
     print OUT "Script\t$0\n";
     print OUT "args $command_line\n";
@@ -1057,9 +1060,9 @@ sub extract_sequences_from_results{
 
 sub checkBIN{
     my ($a,$b) = @_;
-	my $e = system("$a 1>$dir/tmp/binaries 2>$dir/tmp/binaries2");
+	my $e = system("$a 1>$dir_tmp/binaries 2>$dir_tmp/binaries2");
 
-    open IN,"<$dir/tmp/binaries";
+    open IN,"<$dir_tmp/binaries";
     my $found = 1;
     while(<IN>){
 		if(/$b/){
@@ -1068,7 +1071,7 @@ sub checkBIN{
 	}
 	close IN;
 	if($found){
-		open IN,"<$dir/tmp/binaries2";
+		open IN,"<$dir_tmp/binaries2";
 		while(<IN>){
 			if(/$b/){
 				$found =0;
