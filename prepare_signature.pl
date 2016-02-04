@@ -81,7 +81,7 @@ if($options{a}){
 
 
 ## remove temporary directory
-#rmtree($dir);
+rmtree($dir);
 
 if($options{b}){print STDERR "signature file prepared\n\n";}
 
@@ -144,7 +144,6 @@ sub Sortarf {
 		print "$hash2{$_}\n";                         ## print hash
 	}
 }
-system("rm -rf $dir");
 exit;
 
 

@@ -195,12 +195,13 @@ if($options{'s'}){
 
 my $dir="expression_analyses";
 
-if(not -d $dir){
-  mkdir($dir);
-}
+#if(not -d $dir){
+#  mkdir($dir);
+#}
 
 
-my $outdir="${dir}/${dir}_${time}";
+#my $outdir="${dir}/${dir}_${time}";
+my $outdir="${dir}_${time}";
 if(not -d $outdir){
   mkdir($outdir);
 }

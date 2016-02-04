@@ -565,8 +565,8 @@ sub make_dir_tmp{
     #    mkdir("mirdeep_runs");
     #}
 
-    print STDERR "mkdir $dir\n\n";
     $dir="$time";
+    print STDERR "mkdir $dir\n\n";
     if(not -d "$dir"){
         mkdir("$dir");
     }	
