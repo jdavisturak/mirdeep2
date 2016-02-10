@@ -271,12 +271,12 @@ started: $sTimeG
 ended: $eTimeG
 total:", int($etimeG / 3600),"h:",int(($etimeG % 3600) / 60),"m:",int($etimeG % 60),"s\n\n";
 
-open OUT,">>$dir/run_${time}_parameters" or die "parameter file not found\n";
-print OUT "miRDeep runtime: \n
-started: $sTimeG
-ended: $eTimeG
-total:", int($etimeG / 3600),"h:",int(($etimeG % 3600) / 60),"m:",int($etimeG % 60),"s\n\n";
-close OUT;
+#open OUT,">>$dir/run_${time}_parameters" or die "parameter file not found\n";
+#print OUT "miRDeep runtime: \n
+#started: $sTimeG
+#ended: $eTimeG
+#total:", int($etimeG / 3600),"h:",int(($etimeG % 3600) / 60),"m:",int($etimeG % 60),"s\n\n";
+#close OUT;
 
 
 exit;
@@ -560,6 +560,11 @@ If you have precursors with less than $minpreslen please use option -p <int> to 
 
 sub make_dir_tmp{
 
+    my $master_dir = "mirdeep_$time";
+    if(not -d $master_dir){
+        mkdir($master_dir);
+    }
+    chdir($master_dir);	
     #make temporary directory
     if(not -d "mirdeep_runs"){
         mkdir("mirdeep_runs");
@@ -917,9 +922,17 @@ sub output_results{
 ##remove temporary directory
 sub remove_dir_tmp{
     if($options{v}){
-
+	system("ls");
         print STDERR "rmtree($dir_tmp)\n\n";
         rmtree($dir_tmp);
+        print STDERR "rmtree(expression_analyses)\n\n";
+        rmtree("expression_analyses");
+        print STDERR "rmtree(dir_prepare_signature)\n\n";
+        rmtree("dir_prepare_signature");
+        print STDERR "rmtree(mirdeep_runs)\n\n";
+        rmtree("mirdeep_runs");
+        print STDERR "rmtree(mirna_results_$time)\n\n";
+        rmtree("mirna_results_$time");
     }
     return;
 }
