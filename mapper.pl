@@ -65,23 +65,11 @@ $0 reads_seq.txt -a -h -i -j -k TCGTATGCCGTCTTCTGCTTGT  -l 18 -m -p h_sapiens_37
 
 ###################################### INPUT #######################################################
 
-## create a log file for the mapper.pl
-## the latest run of mapper will be on top of the log file
-##
-##
-
-if(-f "mapper.log"){
-	`mv mapper.log mapper.log_bak`;
-}else{
-	`touch mapper.log_bak`;
-}
-
-open MAP,">mapper.log_tmp" or die "could not create mapper.log_tmp\n";
 
 my $cdir = `pwd`;
 
-print MAP "current dir:\t$cdir";
-print MAP "mapper command:\t$0 @ARGV\n"; 
+print STDERR "current dir:\t$cdir";
+print STDERR "mapper command:\t$0 @ARGV\n"; 
 
 my $file_reads=shift or die $usage;
 
@@ -151,12 +139,8 @@ if($options{d}){
     handle_one_file($file_reads,$prefix_global);
 }
 
-print MAP "#"x60,"\n\n";
+print STDERR "#"x60,"\n\n";
 
-close MAP;
-
-`cat mapper.log_tmp mapper.log_bak > mapper.log`;
-`rm mapper.log_tmp mapper.log_bak`;
 
 
 ## get some statistics about mapped reads if options{'s'} and options{'t'} are supplied
@@ -186,7 +170,7 @@ sub handle_config_file{
 
 	    test_prefix($prefix);
 
-		print MAP "\nhandling file \'$file\' with prefix \'$prefix\'\n";
+		print STDERR "\nhandling file \'$file\' with prefix \'$prefix\'\n";
 		
 		## check if files in config file are in accordance with option specified
 		if($options{'a'}){check_file_format_and_option($file,'a') };
@@ -212,7 +196,7 @@ sub make_dir_tmp{
     $month++;
     my $time=sprintf "%02d_%02d_%02d_t_%02d_%02d_%02d", $day, $month, $year, $hour, $min, $sec;
 
-	print MAP "\ntimestamp:\t$time\n\n"; 
+	print STDERR "\ntimestamp:\t$time\n\n"; 
 	
 	my $num=rand(1);
 	my $chance=substr($num,2,10);
@@ -254,17 +238,17 @@ sub process_reads{
         ## parse fastq to fasta
         if($options{e}){
 
-			print MAP "parsing fastq to fasta format\n";
+			print STDERR "parsing fastq to fasta format\n";
 
             if($options{v}){print STDERR "parsing fastq to fasta format\n";}
 
-			print MAP "fastq2fasta.pl $file_reads_latest > $dir/reads.fa\n";
+			print STDERR "fastq2fasta.pl $file_reads_latest > $dir/reads.fa\n";
 
             my $ret_format=`fastq2fasta.pl $file_reads_latest > $dir/reads.fa`;
             $file_reads_latest="$dir/reads.fa";
         }else{
 			
-			print MAP "parsing Solexa / Illumina output to fasta format\n";
+			print STDERR "parsing Solexa / Illumina output to fasta format\n";
 
             if($options{v}){print STDERR "parsing Solexa / Illumina output to fasta format\n";}
             
@@ -272,7 +256,7 @@ sub process_reads{
     
             if($options{b}){$line.=" -a";}
             
-			print MAP "$line > $dir/reads.fa\n";
+			print STDERR "$line > $dir/reads.fa\n";
 
             my $ret_format=`$line > $dir/reads.fa`;
             
@@ -283,11 +267,11 @@ sub process_reads{
    #rna2dna
     if($options{i}){
 
-		print MAP "converting rna to dna alphabet\n";
+		print STDERR "converting rna to dna alphabet\n";
 
 	if($options{v}){print STDERR "converting rna to dna alphabet\n";}
 
-		print MAP "rna2dna.pl $file_reads_latest > $dir/reads_dna.fa\n";
+		print STDERR "rna2dna.pl $file_reads_latest > $dir/reads_dna.fa\n";
 		
 	my $ret_rna2dna=`rna2dna.pl $file_reads_latest > $dir/reads_dna.fa`;
     
@@ -298,11 +282,11 @@ sub process_reads{
     #discard entries that contain non-canonical letters
     if($options{j}){
 
-		print MAP "discarding sequences with non-canonical letters\n";
+		print STDERR "discarding sequences with non-canonical letters\n";
 
 	if($options{v}){print STDERR "discarding sequences with non-canonical letters\n";}
 
-		print MAP "fastaparse.pl $file_reads_latest -b > $dir/reads_letters.fa 2>$dir/reads_discarded.fa\n";
+		print STDERR "fastaparse.pl $file_reads_latest -b > $dir/reads_letters.fa 2>$dir/reads_discarded.fa\n";
 
 	my $ret_clip=`fastaparse.pl $file_reads_latest -b > $dir/reads_letters.fa 2>$dir/reads_discarded.fa`;
 
@@ -313,11 +297,11 @@ sub process_reads{
     #clip 3' adapters
     if($options{k}){
 
-		print MAP "clipping 3' adapters\n";
+		print STDERR "clipping 3' adapters\n";
 
 	if($options{v}){print STDERR "clipping 3' adapters\n";}
 
-		print MAP "clip_adapters.pl $file_reads_latest $options{k} > $dir/reads_clip.fa\n";
+		print STDERR "clip_adapters.pl $file_reads_latest $options{k} > $dir/reads_clip.fa\n";
 
 	my $ret_clip=`clip_adapters.pl $file_reads_latest $options{k} > $dir/reads_clip.fa`;
 
@@ -328,11 +312,11 @@ sub process_reads{
     #discard short reads
     if($options{l}){
 
-		print MAP "discarding short reads\n";
+		print STDERR "discarding short reads\n";
 
 	if($options{v}){print STDERR "discarding short reads\n";}
 
-		print MAP "fastaparse.pl $file_reads_latest -a $options{l} > $dir/reads_no_short.fa 2>$dir/reads_too_short\n";
+		print STDERR "fastaparse.pl $file_reads_latest -a $options{l} > $dir/reads_no_short.fa 2>$dir/reads_too_short\n";
 
 	my $ret_rem_short=`fastaparse.pl $file_reads_latest -a $options{l} > $dir/reads_no_short.fa 2>$dir/reads_too_short.fa`;
 
@@ -343,11 +327,11 @@ sub process_reads{
     #collapse reads
     if($options{m}){
 
-		print MAP "collapsing reads\n";
+		print STDERR "collapsing reads\n";
 
 	if($options{v}){print STDERR "collapsing reads\n";}
 
-		print MAP "collapse_reads_md.pl $file_reads_latest $prefix > $dir/reads_nr.fa\n";
+		print STDERR "collapse_reads_md.pl $file_reads_latest $prefix > $dir/reads_nr.fa\n";
 
 	my $ret_collapse=`collapse_reads_md.pl $file_reads_latest $prefix > $dir/reads_nr.fa`;
 
@@ -370,7 +354,7 @@ sub map_reads{
 
     #map reads to genome
 
-	print MAP "mapping reads to genome index\n";
+	print STDERR "mapping reads to genome index\n";
 
     if($options{v}){print STDERR "mapping reads to genome index\n";}
     
@@ -381,14 +365,14 @@ sub map_reads{
 		$mapping_loc=$options{'r'};
 	}
 
-	print MAP "bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt 2>bowtie.log\n\n";
+	print STDERR "bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt \n\n";
 #bowtie -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest $file_reads_latest $dir/mappings.bwt\n\n";
 
-    my $ret_mapping=`bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt 2>bowtie.log`;
+    my $ret_mapping=`bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt `;
     
     my $file_mapping_latest="$dir/mappings.bwt";
     
-	print MAP "convert_bowtie_output.pl $file_mapping_latest > $dir/mappings.arf\n";
+	print STDERR "convert_bowtie_output.pl $file_mapping_latest > $dir/mappings.arf\n";
 
     my $ret_parse_to_arf=`convert_bowtie_output.pl $file_mapping_latest > $dir/mappings.arf`;
     
@@ -396,11 +380,11 @@ sub map_reads{
     
     #trim unmapped nts in the 3' end
 
-	print MAP "trimming unmapped nts in the 3' ends\n";
+	print STDERR "trimming unmapped nts in the 3' ends\n";
 	
     if($options{v}){print STDERR "trimming unmapped nts in the 3' ends\n";}
     
-	print MAP "parse_mappings.pl $file_mapping_latest -j > $dir/mappings_trim.arf\n\n";
+	print STDERR "parse_mappings.pl $file_mapping_latest -j > $dir/mappings_trim.arf\n\n";
 
     my $ret_trim=`parse_mappings.pl $file_mapping_latest -j > $dir/mappings_trim.arf`;
     
@@ -418,7 +402,7 @@ sub map_reads{
 sub remove_dir_tmp{
     #remove temporary directory
     unless($options{u}){
-		print MAP "remove tmp dir\nrmtree($dir)\n\n";
+		print STDERR "remove tmp dir\nrmtree($dir)\n\n";
 		rmtree($dir);
     }
     return;
