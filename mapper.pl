@@ -368,9 +368,10 @@ sub map_reads{
 	print STDERR "bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt \n\n";
 #bowtie -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest $file_reads_latest $dir/mappings.bwt\n\n";
 
-    my $ret_mapping=`bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt `;
-    
-    my $file_mapping_latest="$dir/mappings.bwt";
+    my $ret_mapping=system("bowtie -p $threads -f -n $mismatches_seed -e 80 -l 18 -a -m $mapping_loc --best --strata $file_genome_latest  --al $dir/${orig_file_reads}_mapped --un $dir/${orig_file_reads}_not_mapped  $file_reads_latest $dir/mappings.bwt");
+   die if ($ret_mapping); 
+   my $file_mapping_latest="$dir/mappings.bwt";
+      
     
 	print STDERR "convert_bowtie_output.pl $file_mapping_latest > $dir/mappings.arf\n";
 
