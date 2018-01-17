@@ -248,11 +248,11 @@ sub process_reads{
             my $ret_format=`fastq2fasta.pl $file_reads_latest > $dir/reads.fa`;
             $file_reads_latest="$dir/reads.fa";
         }elsif($options{z}){
-            print MAP "parsing fastq.gz to fasta format\n";
+            print STDERR "parsing fastq.gz to fasta format\n";
 
             if($options{v}){print STDERR "parsing fastq to fasta format\n";}
 
-			print MAP "gunzip -c $file_reads_latest | fastq_to_fasta  > $dir/reads.fa\n";
+			print STDERR "gunzip -c $file_reads_latest | fastq_to_fasta  > $dir/reads.fa\n";
 
             my $ret_format=`gunzip -c $file_reads_latest | fastq_to_fasta  > $dir/reads.fa`;
             $file_reads_latest="$dir/reads.fa";
