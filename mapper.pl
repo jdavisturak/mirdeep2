@@ -511,7 +511,8 @@ sub check_options{
     if($options{c}){$formats++; check_file_format_and_option($file_reads,'c') if(not $options{'d'});}
 
     if($options{e}){$formats++; check_file_format_and_option($file_reads,'e') if(not $options{'d'});}
-    
+    if($options{z}){$formats++; }
+
     unless($formats==1){die "exactly one input format (-a, -b , -e or -c) must be designated\n";}
     
 	## check if file supplied matches option, otherwise quit
