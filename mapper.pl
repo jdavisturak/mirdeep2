@@ -23,6 +23,7 @@ Read input file:
 -b              input file is qseq.txt format
 -c              input file is fasta format
 -e              input file is fastq format
+-z              input file is fastq.gz format
 -d              input file is a config file (see miRDeep2 documentation).
                 options -a, -b, -c or -e must be given with option -d.
 
@@ -98,7 +99,7 @@ foreach(@ARGV){
 check_line($line);
 
 my %options=();
-getopts("abcdeg:hijk:l:mp:qs:t:uvnr:o:",\%options);
+getopts("abcdeg:hijk:l:mp:qs:t:uvnr:o:z",\%options);
 
 
 `rm $options{'s'}` if(defined $options{'s'} and -f $options{'s'} and $options{'n'});
@@ -262,7 +263,17 @@ sub process_reads{
 
             my $ret_format=`fastq2fasta.pl $file_reads_latest > $dir/reads.fa`;
             $file_reads_latest="$dir/reads.fa";
+        }elsif($options{z}){
+            print MAP "parsing fastq.gz to fasta format\n";
+
+            if($options{v}){print STDERR "parsing fastq to fasta format\n";}
+
+			print MAP "gunzip $file_reads_latest | fastq_to_fasta  > $dir/reads.fa\n";
+
+            my $ret_format=`gunzip $file_reads_latest | fastq_to_fasta  > $dir/reads.fa`;
+            $file_reads_latest="$dir/reads.fa";
         }else{
+
 			
 			print MAP "parsing Solexa / Illumina output to fasta format\n";
 
