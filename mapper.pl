@@ -252,9 +252,9 @@ sub process_reads{
 
             if($options{v}){print STDERR "parsing fastq to fasta format\n";}
 
-			print MAP "gunzip $file_reads_latest | fastq_to_fasta  > $dir/reads.fa\n";
+			print MAP "gunzip -c $file_reads_latest | fastq_to_fasta  > $dir/reads.fa\n";
 
-            my $ret_format=`gunzip $file_reads_latest | fastq_to_fasta  > $dir/reads.fa`;
+            my $ret_format=`gunzip -c $file_reads_latest | fastq_to_fasta  > $dir/reads.fa`;
             $file_reads_latest="$dir/reads.fa";
         }else{
 
