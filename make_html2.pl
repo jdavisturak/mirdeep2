@@ -463,11 +463,11 @@ sub CreateStructurePDFQuantifier{
 ## insert secondary structure now
 
         DrawStructure($filename);
-        if($totalreads ne '0'){
+        #if($totalreads ne '0'){
        #     CreateHistogramQuantifier();
             #ClosePDF($filename);
             #exit;
-}
+        #}
         ## by ref
    #     CreateAlignmentQuantifier(\%hash);
         $y -=20;
