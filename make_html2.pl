@@ -479,7 +479,7 @@ sub CreateStructurePDFQuantifier{
         chdir "..";
         print STDERR "creating pdf for $filename finished\n";
     }
-    unlink("$cwd/pdfs_$time/tmp");
+    #unlink("$cwd/pdfs_$time/tmp");
 }
 
 sub CreateHistogramQuantifier{
