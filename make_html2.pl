@@ -405,6 +405,10 @@ sub CreateStructurePDFQuantifier{
         print FOLD "5${pri_seq}3\n";
         close FOLD;
 
+        open FOLD2,">$cwd/pdfs_$time/$filename.structure" or die "Error: cannot create structure file$!\n";
+        print FOLD2 "5${pri_seq}3\n";
+        close FOLD2;
+
         for ($i=0; $i < length($struct);$i++)
         {
             $struct{$i} = 0;
@@ -850,7 +854,7 @@ sub DrawStructure{
             next;
         }
         
-        $twisted = 1 if($mb > $lb ); ## mature begin is after loop begin
+        #$twisted = 1 if($mb > $lb ); ## mature begin is after loop begin
         
 
         if ($in_pairs and /\[(\S+)\s+(\S+)\]/)
