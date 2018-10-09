@@ -464,12 +464,12 @@ sub CreateStructurePDFQuantifier{
 
         DrawStructure($filename);
         if($totalreads ne '0'){
-            CreateHistogramQuantifier();
+       #     CreateHistogramQuantifier();
             #ClosePDF($filename);
             #exit;
 }
         ## by ref
-        CreateAlignmentQuantifier(\%hash);
+   #     CreateAlignmentQuantifier(\%hash);
         $y -=20;
         
 ### here the Frequency histogram is drawn
@@ -983,7 +983,7 @@ sub DrawStructure{
     }
 
     my $alpha;
-    my $do_rot = 0;
+    my $do_rot = 1;
     if ($do_rot)
     {
         my $last = $xc{0};
@@ -1152,7 +1152,7 @@ sub DrawStructure{
         
     }
 
-    Base($xc{0}+$x,$yc{0}+$y,"$rna_d[0]'",'black',8);
+    Base($xc{0}+$x,$yc{0}+$y,"$rna_d[0]'",'black',14);
     for (my $i=1; $i < (scalar @rna_d)-2; $i++)
     {
         
