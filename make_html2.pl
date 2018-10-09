@@ -1152,7 +1152,7 @@ sub DrawStructure{
         
     }
 
-    Base($xc{0}+$x,$yc{0}+$y,"$rna_d[0]'",'black',14);
+    Base($xc{0}+$x,$yc{0}+$y,"$rna_d[0]'",'black',8);
     for (my $i=1; $i < (scalar @rna_d)-2; $i++)
     {
         
