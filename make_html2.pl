@@ -854,7 +854,7 @@ sub DrawStructure{
             next;
         }
         
-        #$twisted = 1 if($mb > $lb ); ## mature begin is after loop begin
+        $twisted = 1 if($mb > $lb ); ## mature begin is after loop begin
         
 
         if ($in_pairs and /\[(\S+)\s+(\S+)\]/)
@@ -983,7 +983,7 @@ sub DrawStructure{
     }
 
     my $alpha;
-    my $do_rot = 1;
+    my $do_rot = 0;
     if ($do_rot)
     {
         my $last = $xc{0};
