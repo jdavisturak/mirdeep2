@@ -2,6 +2,7 @@
 
 
 use strict;
+use warnings;
 use Getopt::Std;
 use Cwd;
 
@@ -472,9 +473,9 @@ sub CreateStructurePDFQuantifier{
         
         
         ClosePDF($filename);
-        unlink("$cwd/pdfs_$time/${filename}_ss.ps");
-        unlink("$cwd/pdfs_$time/$filename.tmp");
-        unlink("$cwd/pdfs_$time/rna.ps");
+#        unlink("$cwd/pdfs_$time/${filename}_ss.ps");
+#        unlink("$cwd/pdfs_$time/$filename.tmp");
+#        unlink("$cwd/pdfs_$time/rna.ps");
         chdir "..";
         print STDERR "creating pdf for $filename finished\n";
     }
