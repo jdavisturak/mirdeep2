@@ -573,13 +573,13 @@ sub CreatePDFQuantifier{
     ## move everything except the structure downwards if $mirbase is set
     my $madd = 60;
 
-    $gfx->textlabel($xposshift+20,$y+300+$downy,$trb,8,"miRBase precursor",-color=>'black');
-    $gfx->textlabel($xposshift+110,$y+300+$downy,$trb,8,": $sid",-color=>'black');
+    #$gfx->textlabel($xposshift+20,$y+300+$downy,$trb,8,"miRBase precursor",-color=>'black');
+    #$gfx->textlabel($xposshift+110,$y+300+$downy,$trb,8,": $sid",-color=>'black');
 
 
     $spaces = " " x ($spacer - length($$hash{$sid}{"freq_total"}));
-    $gfx->textlabel($xposshift+20,$y+230+$madd+$downy,$trb,8,"Total read count",-color=>'black');       
-    $gfx->textlabel($xposshift+110,$y+230+$madd+$downy,$trb,8,": $$hash{$sid}{'freq_total'}",-color=>'black');
+    #$gfx->textlabel($xposshift+20,$y+230+$madd+$downy,$trb,8,"Total read count",-color=>'black');
+    #$#gfx->textlabel($xposshift+110,$y+230+$madd+$downy,$trb,8,": $$hash{$sid}{'freq_total'}",-color=>'black');
 
     ## here should be written how many annotated stuff is actually there and how many not
     my $jk =10;
@@ -594,14 +594,14 @@ sub CreatePDFQuantifier{
             next if($_ !~ $options{'m'});
         }
         $spaces = " " x ($spacer - length($_));
-        $gfx->textlabel($xposshift+20,$y+230-$jk+$madd+$downy,$trb,8,"$h read count",-color=>'black');      
-        $gfx->textlabel($xposshift+110,$y+230-$jk+$madd+$downy,$trb,8,": $$hash{$sid}{'mapped'}{$h}",-color=>'black');
+        #$gfx->textlabel($xposshift+20,$y+230-$jk+$madd+$downy,$trb,8,"$h read count",-color=>'black');
+        #$gfx->textlabel($xposshift+110,$y+230-$jk+$madd+$downy,$trb,8,": $$hash{$sid}{'mapped'}{$h}",-color=>'black');
         $jk+=10;
     }
 
     $spaces = " " x ($spacer - length("remaining reads"));
-    $gfx->textlabel($xposshift+20,$y+230-$jk+$madd+$downy,$trb,8,"remaining reads",-color=>'black');      
-    $gfx->textlabel($xposshift+110,$y+230-$jk+$madd+$downy,$trb,8,": $$hash{$sid}{'remaining_rc'}",-color=>'black');
+    #$gfx->textlabel($xposshift+20,$y+230-$jk+$madd+$downy,$trb,8,"remaining reads",-color=>'black');
+    #$gfx->textlabel($xposshift+110,$y+230-$jk+$madd+$downy,$trb,8,": $$hash{$sid}{'remaining_rc'}",-color=>'black');
     $jk+=10;
     $trb=$pdf->corefont('Courier', -encode=>'latin1');
 }
